@@ -12,6 +12,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class MyGLRenderer implements GLSurfaceView.Renderer {
     private Context m_Context;
@@ -35,7 +36,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
     private float maxScale = 0.035f;
 
 
-    private Vector3 earthScale = new Vector3(0.015f, 0.015f, 0.015f);
+    private Vector3 earthScale = new Vector3(0.03f, 0.03f, 0.03f);
     private Vector3 MoonScale = new Vector3(0.008f, 0.008f, 0.008f);
 
     private boolean isCreate = false;
@@ -104,9 +105,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Log.v("pos", Float.toString(posX) + " ; " + Float.toString(posZ));
         Vector3 Position = new Vector3(posX, 0, posZ);
 
-        moon.m_Orientation.SetPosition(Position);
-        moon.m_Orientation.SetRotationAxis(new Vector3(1f, 1f, 1f));
-        moon.m_Orientation.SetScale(MoonScale);
+        moon.getOrientation().SetPosition(Position);
+        moon.getOrientation().SetRotationAxis(new Vector3(1f, 1f, 1f));
+        moon.getOrientation().SetScale(MoonScale);
 
         return moon;
     }
@@ -147,9 +148,9 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
         Vector3 Axis = new Vector3(1, 1, 1);
         Vector3 Position = new Vector3((float) Math.random() * 50 - 25, (float) Math.random() * 20 - 10, (float) Math.random() * 50 - 25);
 
-        object.m_Orientation.SetPosition(Position);
-        object.m_Orientation.SetRotationAxis(Axis);
-        object.m_Orientation.SetScale(earthScale);
+        object.getOrientation().SetPosition(new Vector3(0,0,0));
+        object.getOrientation().SetRotationAxis(Axis);
+        object.getOrientation().SetScale(earthScale);
 
         return object;
     }
@@ -202,16 +203,18 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
             listObj.clear();
         }
 
-        long time = SystemClock.uptimeMillis() % 10000L;
-        float angle = 0.0360f * ((int) time);
-        if (angle > 360.0f) {
-            angle = 360.0f;
-        }
+
         //drawing object
         for (Object3d object : listObj) {
+            long time = SystemClock.uptimeMillis() % 10000L;
+            float angle = 0.0360f * ((int) time);
+            if (angle > 360.0f) {
+                angle = 360.0f;
+            }
             object.DrawObject(m_Camera, m_PointLight,angle,minScale,maxScale,this.getScaleOffset());
 
         }
+        Log.v("list", String.valueOf(listObj.size()));
     }
 
     public float getYaw() {

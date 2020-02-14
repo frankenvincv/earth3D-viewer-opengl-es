@@ -10,7 +10,9 @@ import android.opengl.GLU;
 
 public class Object3d 
 {
-	Orientation	m_Orientation = null;
+
+
+	private Orientation	m_Orientation = null;
 	
 	private Context		m_Context	= null;
 	//private Mesh 		m_Mesh 		= null;
@@ -276,7 +278,7 @@ public class Object3d
 	{
 
 	    if (this.isMoon()){
-	        //this.moonBehavior(angle);
+	        this.moonBehavior(angle);
         }
 	    else{
 	        this.earthBehavior(minScale,maxScale,scaleOffset);
@@ -326,8 +328,17 @@ public class Object3d
 
 		float posX = (float) (Math.cos(Math.toRadians(angle)) * 20f);
 		float posZ = (float) (Math.sin(Math.toRadians(angle)) * 20f);
-		this.m_Orientation.GetPosition().Set(posX, 0, posZ);
-		this.m_Orientation.AddRotationY(0.3f);
+		this.getOrientation().GetPosition().Set(posX, 0, posZ);
+		this.getOrientation().AddRotationY(0.3f);
+	}
+
+
+	public Orientation getOrientation() {
+		return m_Orientation;
+	}
+
+	public void setOrientation(Orientation m_Orientation) {
+		this.m_Orientation = m_Orientation;
 	}
 	
 }
