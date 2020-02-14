@@ -56,4 +56,10 @@ public class Cube extends Object3d {
                 iMaterial,
                 iShader);
     }
+
+
+
+    Cube(Cube another){
+        super(another);
+    }
 }

@@ -38,14 +38,33 @@ public class Object3d
 	private float 	m_TexAnimDelay 		= 0; // in seconds
 	private float 	m_TargetTime 		= 0;
 	private float 	m_Counter 			= 0;
-	
 
-	Object3d(Context iContext, 
-			 //Mesh iMesh, 
-			 MeshEx iMeshEx, 
-			 Texture[] iTextures, 
-			 Material iMaterial, 
-			 Shader iShader)
+
+	//check visible
+    private boolean m_Visible = true;
+
+
+    //type
+	private boolean isMoon = false;
+
+	public boolean isMoon() {
+		return isMoon;
+	}
+
+	public void setMoon(boolean moon) {
+		isMoon = moon;
+	}
+
+	//scale error
+	private float errorVale = 0.000000001f;
+
+
+    Object3d(Context iContext,
+             //Mesh iMesh,
+             MeshEx iMeshEx,
+             Texture[] iTextures,
+             Material iMaterial,
+             Shader iShader)
 	{	
 		m_Context	= iContext;
 		//m_Mesh 		= iMesh;
@@ -65,8 +84,13 @@ public class Object3d
 		
 		m_Orientation = new Orientation(m_Context);	
 	}
-		
-	public void CheckGLError(String glOperation) 
+
+	public Object3d(Object3d another) {
+		this(another.m_Context,another.m_MeshEx,another.m_Textures,another.m_Material,another.m_Shader);
+
+	}
+
+	public void CheckGLError(String glOperation)
 	{
 		int error;
 	    while ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) 
@@ -247,15 +271,63 @@ public class Object3d
 	  	  
 	}
 
-	void DrawObject(Camera Cam, PointLight light)
+
+	void DrawObject(Camera Cam, PointLight light,float angle, float minScale,float maxScale, float scaleOffset)
 	{
 
+	    if (this.isMoon()){
+	        //this.moonBehavior(angle);
+        }
+	    else{
+	        this.earthBehavior(minScale,maxScale,scaleOffset);
+        }
+
 		//Log.d("TEST :", (m_Orientation.GetPosition().toString()));
-		DrawObject(Cam,
-				   light,
-				   m_Orientation.GetPosition(),
-				   m_Orientation.GetRotationAxis(),
-				   m_Orientation.GetScale());
+
+
+        if (isVisible()){
+            DrawObject(Cam,
+                    light,
+                    m_Orientation.GetPosition(),
+                    m_Orientation.GetRotationAxis(),
+                    m_Orientation.GetScale());
+        }
+
+
+	}
+
+
+    public boolean isVisible() {
+        return m_Visible;
+    }
+
+    public void setVisible(boolean m_Visible) {
+        this.m_Visible = m_Visible;
+    }
+
+	void earthBehavior(float minScale, float maxScale, float scaleOffset){
+
+        this.m_Orientation.AddRotationY(0.6f);
+
+    	/*Vector3 scaleV = this.m_Orientation.GetScale();
+		if (scaleV.inRange(minScale, maxScale)) {
+			scaleV.AddScale(scaleOffset);
+			this.m_Orientation.SetScale(scaleV);
+		} else {
+			if (Math.abs(maxScale - scaleV.Length()) > Math.abs(minScale - scaleV.Length())) {
+				scaleV.Set(minScale + errorVale, minScale + errorVale, minScale + errorVale);
+			} else {
+				scaleV.Set(maxScale - errorVale * 2, maxScale - errorVale * 2, maxScale - errorVale * 2);
+			}
+		}*/
+	}
+
+	void moonBehavior(float angle){
+
+		float posX = (float) (Math.cos(Math.toRadians(angle)) * 20f);
+		float posZ = (float) (Math.sin(Math.toRadians(angle)) * 20f);
+		this.m_Orientation.GetPosition().Set(posX, 0, posZ);
+		this.m_Orientation.AddRotationY(0.3f);
 	}
 	
 }

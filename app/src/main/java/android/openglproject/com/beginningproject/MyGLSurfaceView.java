@@ -2,6 +2,7 @@ package android.openglproject.com.beginningproject;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -14,7 +15,10 @@ public class MyGLSurfaceView extends GLSurfaceView {
     private float previousY;
 
 
-    private final MyGLRenderer renderer;
+
+
+
+    public final MyGLRenderer renderer;
 
     public MyGLSurfaceView(Context context) {
         super(context);
@@ -25,6 +29,23 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
         setRenderer(renderer);
     }
+
+    public MyGLSurfaceView(Context context, AttributeSet attrs)
+    {
+        super(context, attrs);
+// Create an OpenGL ES 2.0 context.
+        setEGLContextClientVersion(2);
+// Set the Renderer for drawing on the GLSurfaceView
+        renderer = new MyGLRenderer(context);
+        setRenderer(renderer);
+    }
+
+
+
+
+
+
+
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
